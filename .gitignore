@@ -4,3 +4,6 @@ fishToPersp
 cmake_install.cmake
 *.jpg
 Makefile
+files/input/*
+files/output/*
+build/
