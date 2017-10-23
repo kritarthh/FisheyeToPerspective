@@ -15,4 +15,4 @@
   + arg6: vertial up view angle
   + arg7: horizontal view angles count
 + Example Usage:
-  + ./fishToPersp -30 +30 11 0 0 1
+  + ./fishToPersp . -30 +30 11 0 0 1
