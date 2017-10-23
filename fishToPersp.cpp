@@ -245,14 +245,16 @@ void fishToPersp(string path, fish_span& fs, ocam_model& o)
     replace(path, "/input/", "/output/");
 
     if (origImage.empty()) {
-        cout<<"Empty image\n";
+        cout << "Empty image: " << path << "\n";
         return;
     }
-    float hor, vir;
+
+    #pragma omp parallel for
     for (int h = 0; h < fs.hor_cnt; ++h)
     {
         for (int v = 0; v < fs.vir_cnt; ++v)
         {
+            float hor, vir;
             if (fs.hor_cnt == 1) hor = fs.hor_left;
             else hor = fs.hor_left + ((fs.hor_right - fs.hor_left)/(fs.hor_cnt - 1)) * h;
             if (fs.vir_cnt == 1) vir = fs.vir_down;
@@ -353,7 +355,7 @@ void fishToPersp(string path, fish_span& fs, ocam_model& o)
     return;
 }
 
-int listdir(string path, fish_span& fs, ocam_model& o)
+int listdir(string path, std::vector<string>& files)
 {
     struct dirent *entry;
     DIR *dp;
@@ -376,9 +378,10 @@ int listdir(string path, fish_span& fs, ocam_model& o)
         }
         if (name.size() > 4 && name.substr(name.size() - 4) == ".jpg") {
             cout << "Image found: " << name << endl;
-            fishToPersp(path + "/" + name, fs, o);
+            files.push_back(path + "/" + name);
+            // fishToPersp(path + "/" + name, fs, o);
         } else {
-            listdir(path + "/" + name, fs, o);
+            listdir(path + "/" + name, files);
         }
     }
     closedir(dp);
@@ -408,9 +411,17 @@ int main(int argc, char **argv)
 
     string dirPath = string(realpath(argv[1], NULL)) + "/files/input/";
 
-    listdir(dirPath, fs, o);
+    std::vector<string> files;
 
+    listdir(dirPath, files);
+    cout << "Image files retrieved\n";
+    int i;
+    int filesCount = files.size();
 
+    // #pragma omp parallel for private(i, filesCount, fs, o)
+    for (i = 0; i < filesCount; ++i) {
+        fishToPersp(files[i], fs, o);
+    }
 
     return 0;
 }
