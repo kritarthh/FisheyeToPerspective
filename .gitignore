@@ -7,3 +7,5 @@ Makefile
 files/input/*
 files/output/*
 build/
+!files/input/.keep
+!files/output/.keep
