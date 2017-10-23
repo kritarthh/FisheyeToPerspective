@@ -11,8 +11,8 @@
   + arg2: horizontal left view angle
   + arg3: horizontal right view angle
   + arg4: horizontal view angles count
-  + arg5: vertial down view angle
-  + arg6: vertial up view angle
+  + arg5: vertical down view angle
+  + arg6: vertical up view angle
   + arg7: horizontal view angles count
 + Example Usage:
   + ./fishToPersp . -30 +30 11 0 0 1
